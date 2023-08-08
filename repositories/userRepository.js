@@ -15,7 +15,7 @@ var users = [
     { userId: '013@taspen.co.id', userName: 'User 013' },
 ]
 
-function getAllData(skip, take) {
+function getData(skip, take) {
     if (skip && take) {
 
         return { data: users.slice(parseInt(skip) - 1, parseInt(skip) - 1 + parseInt(take)), count: users.length };
@@ -25,4 +25,4 @@ function getAllData(skip, take) {
     }
 }
 
-module.exports = {getAllData }
+module.exports = {getData }

@@ -1,10 +1,24 @@
 const express = require('express');
-const users_dal=require('../dal/users_dal')
+const userRepository=require('../repositories/userRepository')
 const router = express.Router();
-
+var users = [
+    { userId: '001@taspen.co.id', userName: 'User 001' },
+    { userId: '002@taspen.co.id', userName: 'User 002' },
+    { userId: '003@taspen.co.id', userName: 'User 003' },
+    { userId: '004@taspen.co.id', userName: 'User 004' },
+    { userId: '005@taspen.co.id', userName: 'User 005' },
+    { userId: '006@taspen.co.id', userName: 'User 006' },
+    { userId: '007@taspen.co.id', userName: 'User 007' },
+    { userId: '008@taspen.co.id', userName: 'User 008' },
+    { userId: '009@taspen.co.id', userName: 'User 009' },
+    { userId: '010@taspen.co.id', userName: 'User 010' },
+    { userId: '011@taspen.co.id', userName: 'User 011' },
+    { userId: '012@taspen.co.id', userName: 'User 012' },
+    { userId: '013@taspen.co.id', userName: 'User 013' },
+]
 
 router.get('/', (req, res) => {
-        var result =users_dal.getAllData(req.query.skip, req.query.take);
+        var result =userRepository.getData(req.query.skip, req.query.take);
         return res.status(200).send(JSON.stringify(result)); 
 });
 
@@ -28,10 +42,10 @@ router.post('/', (req, res)=> {
 
 router.put('/',(req, res)=>{
     var userId = req.body.userId;
-    var idx = users.findIndex(p => p.userId === userId);
-    if (idx>=0) {
-        users[idx].userName=req.body.userName
-        return res.status(200).send(JSON.stringify(users[idx]));
+    var user = users.find(p => p.userId === userId);
+    if (user) {
+        user.userName=req.body.userName
+        return res.status(200).send(JSON.stringify(user));
     }
     else {
         return res.status(404).send(JSON.stringify({ userId: userId, error: `User with id ${userId} not found` }));
