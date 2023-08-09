@@ -35,10 +35,10 @@ function addData(user){
 }
 
 function updateData(user){
-    var user=users.find(p=>p.userId===user.userId)
-    if(user)
-        user.userName=user.userName;
-    return user;
+    var userData=users.find(p=>p.userId===user.userId)
+    if(userData)
+        userData.userName=user.userName;
+    return userData;
 
 }
 module.exports = {getData, getDataById, addData, updateData }
