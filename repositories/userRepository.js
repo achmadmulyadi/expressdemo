@@ -33,4 +33,12 @@ function addData(user){
     users.push(user);
     return getDataById(user.userId);
 }
-module.exports = {getData, getDataById, addData }
+
+function updateData(user){
+    var user=users.find(p=>p.userId===user.userId)
+    if(user)
+        user.userName=user.userName;
+    return user;
+
+}
+module.exports = {getData, getDataById, addData, updateData }

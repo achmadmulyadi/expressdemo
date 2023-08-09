@@ -48,9 +48,10 @@ router.post('/', (req, res)=> {
 
 router.put('/',(req, res)=>{
     var userId = req.body.userId;
-    var user = users.find(p => p.userId === userId);
+    var userData=req.body;
+    var user = userRepository.getDataById(userId); //users.find(p => p.userId === userId);
     if (user) {
-        user.userName=req.body.userName
+        userRepository.updateData(userData);
         return res.status(200).send(JSON.stringify(user));
     }
     else {
