@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
         var result =await userRepository.getData(req.query.skip, req.query.take);
         return res.status(200).send(JSON.stringify(result)); 
         
-        
+
 
     } catch (error) {
         console.error(error);
@@ -55,7 +55,7 @@ router.put('/', async (req, res)=>{
     var userData=req.body;
     var user = await userRepository.getDataById(userId); //users.find(p => p.userId === userId);
     if (user) {
-        await userRepository.updateData(userData);
+        user=await userRepository.updateData(userData);
         return res.status(200).send(JSON.stringify(user));
     }
     else {
