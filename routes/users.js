@@ -53,7 +53,8 @@ router.post('/', async (req, res)=> {
 router.put('/', async (req, res)=>{
     var userId = req.body.userId;
     var userData=req.body;
-    var user = await userRepository.getDataById(userId); //users.find(p => p.userId === userId);
+    var user = await userRepository.getDataById(userId); 
+    
     if (user) {
         user=await userRepository.updateData(userData);
         return res.status(200).send(JSON.stringify(user));
