@@ -24,7 +24,8 @@ router.get('/', (req, res) => {
 
 router.get('/:userId', (req, res) => {
     var userId = req.params.userId;
-    var user = users.find(p => p.userId === userId);
+
+    var user=userRepository.getDataById(userId);
     if (user) {
         return res.status(200).send(JSON.stringify(user));
     }
@@ -35,8 +36,13 @@ router.get('/:userId', (req, res) => {
 
 router.post('/', (req, res)=> {
     //TODO: validasi input
-    users.push(req.body);
-    return res.status(200).send(JSON.stringify(req.body));
+    
+    //users.push(req.body);
+    var userData=req.body;
+    if(userRepository.getDataById(userData.userId))
+        return res.status(400).send(`Data with id ${userData.userId}`)
+    var user=userRepository.addData(userData);
+    return res.status(200).send(JSON.stringify(user));
 
 })
 

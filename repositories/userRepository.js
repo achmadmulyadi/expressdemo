@@ -25,4 +25,12 @@ function getData(skip, take) {
     }
 }
 
-module.exports = {getData }
+function getDataById(userId){
+    return users.find(p => p.userId === userId);
+}
+
+function addData(user){
+    users.push(user);
+    return getDataById(user.userId);
+}
+module.exports = {getData, getDataById, addData }
