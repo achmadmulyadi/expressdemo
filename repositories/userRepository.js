@@ -1,3 +1,4 @@
+const con = require('../db/hanaclient');
 
 var users = [
     { userId: '001@taspen.co.id', userName: 'User 001' },
@@ -16,12 +17,23 @@ var users = [
 ]
 
 function getData(skip, take) {
-    if (skip && take) {
+    var sqlcount='SELECT COUNT(*) AS COUNT FROM DEVELOPER.USERS';
+    cmd = con.prepare(sqlcount);
+    var usersCount=cmd.exec();
 
-        return { data: users.slice(parseInt(skip) - 1, parseInt(skip) - 1 + parseInt(take)), count: users.length };
+    if (skip && take) {
+        var sql='SELECT USERID, USERNAME FROM DEVELOPER.USERS LIMIT ? OFFSET ?';
+        var cmd=con.prepare(sql);
+        var usersdb = cmd.exec([take, skip]);
+
+        return { data: usersdb, count: usersCount[0].COUNT };
     }
     else {
-        return { data: users, count: users.length };
+        var sql='SELECT USERID, USERNAME FROM DEVELOPER.USERS';
+        var cmd=con.prepare(sql);
+        var usersdb = cmd.exec();
+        
+        return { data: usersdb, count: usersCount[0].COUNT };
     }
 }
 
