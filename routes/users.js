@@ -1,5 +1,6 @@
 const express = require('express');
-const userRepository=require('../repositories/userRepository')
+const userRepository=require('../repositories/userRepository');
+const Joi = require('joi');
 const router = express.Router();
 
 
@@ -21,10 +22,18 @@ router.get('/:userId', (req, res) => {
 })
 
 router.post('/', (req, res)=> {
-    //TODO: validasi input
-    
-    //users.push(req.body);
+
+    const userSchema = Joi.object({
+        userId : Joi.string().email().required(),
+        userName : Joi.string().required()
+
+    })
     var userData=req.body;
+    var validationResult=userSchema.validate(userData);
+    if(validationResult.error)
+    {
+        return res.status(400).send(JSON.stringify({error: validationResult.error}));
+    }
     if(userRepository.getDataById(userData.userId))
         return res.status(400).send(`Data with id ${userData.userId} already exist`)
     var user=userRepository.addData(userData);
