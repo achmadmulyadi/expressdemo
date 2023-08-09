@@ -4,15 +4,23 @@ const Joi = require('joi');
 const router = express.Router();
 
 
-router.get('/', (req, res) => {
-        var result =userRepository.getData(req.query.skip, req.query.take);
+router.get('/', async (req, res) => {
+    try {
+        var result =await userRepository.getData(req.query.skip, req.query.take);
         return res.status(200).send(JSON.stringify(result)); 
+        
+        
+
+    } catch (error) {
+        console.error(error);
+        return res.status(400).send({error:'Internal Server Error'});
+    }
 });
 
-router.get('/:userId', (req, res) => {
+router.get('/:userId', async (req, res) => {
     var userId = req.params.userId;
 
-    var user=userRepository.getDataById(userId);
+    var user=await userRepository.getDataById(userId);
     if (user) {
         return res.status(200).send(JSON.stringify(user));
     }
@@ -21,7 +29,7 @@ router.get('/:userId', (req, res) => {
     }
 })
 
-router.post('/', (req, res)=> {
+router.post('/', async (req, res)=> {
 
     const userSchema = Joi.object({
         userId : Joi.string().email().required(),
@@ -29,24 +37,25 @@ router.post('/', (req, res)=> {
 
     })
     var userData=req.body;
-    var validationResult=userSchema.validate(userData);
+    var validationResult=await userSchema.validateAsync(userData);
     if(validationResult.error)
     {
         return res.status(400).send(JSON.stringify({error: validationResult.error}));
     }
-    if(userRepository.getDataById(userData.userId))
+
+    if(await userRepository.getDataById(userData.userId))
         return res.status(400).send(`Data with id ${userData.userId} already exist`)
-    var user=userRepository.addData(userData);
+    var user=await userRepository.addData(userData);
     return res.status(200).send(JSON.stringify(user));
 
 })
 
-router.put('/',(req, res)=>{
+router.put('/', async (req, res)=>{
     var userId = req.body.userId;
     var userData=req.body;
-    var user = userRepository.getDataById(userId); //users.find(p => p.userId === userId);
+    var user = await userRepository.getDataById(userId); //users.find(p => p.userId === userId);
     if (user) {
-        userRepository.updateData(userData);
+        await userRepository.updateData(userData);
         return res.status(200).send(JSON.stringify(user));
     }
     else {
