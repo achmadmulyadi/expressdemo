@@ -1,0 +1,252 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>DevExtreme Demo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.12.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/23.1.4/css/dx.light.css" />
+    <script src="https://cdn3.devexpress.com/jslib/23.1.4/js/dx.all.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+</head>
+
+<body class="dx-viewport">
+    <div class="demo-container">
+        <div id="gridContainer"></div>
+
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            loadData();
+        });
+        function loadData() {
+            var users = new DevExpress.data.CustomStore({
+                key: "USERID",
+                load: function (loadOptions) {
+                    var d = $.Deferred();
+                    var params = {};
+                    //Getting filter options
+                    if (loadOptions.filter) {
+                        params.filter = JSON.stringify(loadOptions.filter);
+                    }
+                    //Getting sort options
+                    if (loadOptions.sort) {
+                        params.sort = JSON.stringify(loadOptions.sort);
+                    }
+                    //Getting group options
+                    if (loadOptions.group) {
+                        params.group = JSON.stringify(loadOptions.group);
+                    }
+                    //skip and take are used for paging
+                    params.skip = loadOptions.skip; //A number of records that should be skipped
+                    params.take = loadOptions.take; //A number of records that should be taken
+
+                    //If the select expression is specified
+                    if (loadOptions.select) {
+                        params.select = JSON.stringify(loadOptions.select);
+                    }
+
+                    //If a user typed something in dxAutocomplete, dxSelectBox or dxLookup
+                    if (loadOptions.searchValue) {
+                        params.searchValue = loadOptions.searchValue;
+                        params.searchOperation = loadOptions.searchOperation;
+                        params.searchExpr = loadOptions.searchExpr;
+                    }
+
+
+                    axios.defaults.baseURL = 'http://localhost:3000';
+                    axios.defaults.headers.common['Authorization'] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwMTdAdGFzcGVuLmNvLmlkIiwiaWF0IjoxNjkxNjQwODY3LCJleHAiOjE2OTE3MjcyNjd9.qcc5DFxAfdvTBKX-q1M-wewF95c2hI2Er773U8TH4IQ';
+                    axios.get('/api/v1/users', {
+                        params: params
+                    })
+                        .then(function (response) {
+                            d.resolve(response.data.data, {
+                                totalCount: response.data.count,
+
+                            });
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            if (error.response && error.response.data && error.response.data.error) {
+                                d.reject(error.response.data.error);
+                            } else {
+                                d.reject(error.message);
+                            }
+                        })
+                        .then(function () {
+                        });
+
+
+                    return d.promise();
+                },
+                // onRowUpdating: function (options) {
+                //     options.newData = $.extend({}, options.oldData, options.newData);
+                // },
+                update: function (key, values) {
+
+                    var d = new $.Deferred();
+                    axios.put('/api/v1/users', {
+                        "userId": key,
+                        "userName": values.USERNAME
+                    })
+                        .then(function (response) {
+                            // console.log(response.data);
+                            d.resolve(response.data.data);
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            if (error.response.data && error.response.data.data && error.response.data.error) {
+                                d.reject(error.response.data.error);
+                            } else {
+                                d.reject(error);
+                            }
+                            console.log(error);
+                            //$('#loadingLRPP').html('<td class="c-table__cell u-text-center u-text-danger" colspan="8">Failed load data. <a href="javascript:void(0)" onclick="loadData()">Try Again</a></td>');
+                        })
+                        .then(function () {
+                            // always executed
+                        });
+                    return d.promise();
+                },
+                insert: function (key, values) {
+                    var d = new $.Deferred();
+                    axios.post('/api/v1/users', {
+                        "userId": key.USERID,
+                        "userName": key.USERNAME
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(function (response) {
+                            // console.log(response.data);
+                            d.resolve(response.data.data);
+                        })
+                        .catch(function (error) {
+                            // handle error
+                            if (error.response && error.response.data && error.response.data.error) {
+                                d.reject(error.response.data.error);
+                            } else {
+                                d.reject(error.message);
+                            }
+                            console.log(error);
+                            //$('#loadingLRPP').html('<td class="c-table__cell u-text-center u-text-danger" colspan="8">Failed load data. <a href="javascript:void(0)" onclick="loadData()">Try Again</a></td>');
+                        })
+                        .then(function () {
+                            // always executed
+                        });
+                    return d.promise();
+                },
+            });
+
+            $("#gridContainer").dxDataGrid({
+                dataSource: {
+                    store: users
+                },
+                showRowLines: true,
+                rowAlternationEnabled: true,
+                showBorders: true,
+                filterRow: {
+                    visible: true,
+                    applyFilter: 'auto',
+                },
+                searchPanel: {
+                    visible: true,
+                    width: 240,
+                    placeholder: 'Search...',
+                },
+                editing: {
+                    mode: "form",
+                    allowUpdating: true,
+                    allowDeleting: false,
+                    allowAdding: true
+                },
+
+                showBorders: true,
+                allowColumnReordering: true,
+                allowColumnResizing: true,
+                columnAutoWidth: true,
+                dateSerializationFormat: "yyyy-MM-dd HH:mm:ss",
+                forceIsoDateParsing: true,
+                allowSearching: true,
+                export: {
+                    enabled: true
+                },
+                onExporting(e) {
+                    const workbook = new ExcelJS.Workbook();
+                    const worksheet = workbook.addWorksheet('Users');
+
+                    DevExpress.excelExporter.exportDataGrid({
+                        component: e.component,
+                        worksheet,
+                        autoFilterEnabled: true,
+                    }).then(() => {
+                        workbook.xlsx.writeBuffer().then((buffer) => {
+                            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Users.xlsx');
+                        });
+                    });
+                    e.cancel = true;
+                },
+                columnChooser: {
+                    enabled: true
+                },
+                remoteOperations: {
+                    sorting: true,
+                    filtering: true,
+                    paging: true,
+                    grouping: true
+                },
+                paging: {
+                    pageSize: 10
+                },
+                pager: {
+                    showPageSizeSelector: true,
+                    allowedPageSizes: [10, 30, 50]
+                },
+
+                columns: [{
+                    dataField: "USERID",
+                    caption: "User Id",
+                    dataType: "string",
+                    allowHeaderFiltering: true,
+                    headerFilter: {
+                        search: {
+                            enabled: true
+                        }
+
+                    }
+                },
+                {
+                    dataField: "USERNAME",
+                    caption: "User Name",
+                    dataType: "string",
+                    allowHeaderFiltering: true,
+                    headerFilter: {
+                        search: {
+                            enabled: true
+                        }
+
+                    }
+                },
+                ],
+
+
+
+            }).dxDataGrid("instance");
+
+
+
+        };
+
+    </script>
+</body>
+
+</html>
