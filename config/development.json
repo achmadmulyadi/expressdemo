@@ -1,4 +1,5 @@
 {
+  "jwtPrivateKey":"t4sp3n",
     "dbConfig": {
       "host": "172.16.50.202",
       "port": "38141",
