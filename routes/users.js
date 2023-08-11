@@ -7,7 +7,12 @@ const auth = require('../middleware/auth');
 
 router.get('/', auth, async (req, res) => {
     try {
-        console.log(req.query)
+        console.log('query:',req.query)
+
+        //this is how to retrieve user info from request object stored in auth middleware.        
+        console.log('req.user:',req.user)
+        //or this
+        console.log('res.locals.userId:',res.locals.userId)
         var result = await userRepository.getData(req.query.skip, req.query.take, req.query.filter, req.query.sort);
         return res.status(200).send(JSON.stringify(result));
     } catch (error) {
