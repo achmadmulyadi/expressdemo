@@ -7,6 +7,7 @@ const auth = require('../middleware/auth');
 
 router.get('/', auth, async (req, res) => {
     try {
+        console.log(req.query)
         var result = await userRepository.getData(req.query.skip, req.query.take, req.query.filter, req.query.sort);
         return res.status(200).send(JSON.stringify(result));
     } catch (error) {
@@ -54,17 +55,25 @@ router.post('/', auth, async (req, res) => {
 })
 
 router.put('/', auth, async (req, res) => {
-    var userId = req.body.userId;
-    var userData = req.body;
-    var user = await userRepository.getDataById(userId);
-
-    if (user) {
-        user = await userRepository.updateData(userData);
-        return res.status(200).send(JSON.stringify(user));
-    }
-    else {
+    try {
+        var userId = req.body.userId;
+        var userData = req.body;
+        var user = await userRepository.getDataById(userId);
+    
+        //console.log(`Request by ${req.user.userId} on endpoint /users method PUT`);
+        if (user) {
+            user = await userRepository.updateData(userData);
+            return res.status(200).send(JSON.stringify(user));
+        }
+        else {
+            
+            return res.status(404).send(JSON.stringify({ userId: userId, error: `User with id ${userId} not found` }));
+        }
+    
+    } catch (error) {
         return res.status(404).send(JSON.stringify({ userId: userId, error: `User with id ${userId} not found` }));
     }
+ 
 })
 
 module.exports = router;

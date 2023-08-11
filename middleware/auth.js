@@ -13,6 +13,8 @@ module.exports = function (req, res, next) {
     var jwtPrivateKey = config.get('jwtPrivateKey');
     try {
         var decoded = jwt.verify(token, jwtPrivateKey)
+        req.user = decoded;
+        console.log(req.user)
     }
     catch (err) {
         return res.status(401).json({ error: 'Invalid Token' });

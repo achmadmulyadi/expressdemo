@@ -116,11 +116,11 @@
                         });
                     return d.promise();
                 },
-                insert: function (key, values) {
+                insert: function (values) {
                     var d = new $.Deferred();
                     axios.post('/api/v1/users', {
-                        "userId": key.USERID,
-                        "userName": key.USERNAME
+                        "userId": values.USERID,
+                        "userName": values.USERNAME
                     }, {
                         headers: {
                             'Content-Type': 'application/json'
@@ -209,7 +209,7 @@
                 },
                 pager: {
                     showPageSizeSelector: true,
-                    allowedPageSizes: [10, 30, 50]
+                    allowedPageSizes: [5,10, 30, 50]
                 },
 
                 columns: [{
