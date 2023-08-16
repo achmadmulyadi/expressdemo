@@ -1,0 +1,9 @@
+{
+  "jwtPrivateKey":"t4sp3n",
+    "dbConfig": {
+      "host": "192.100.18.21",
+      "port": "31041",
+      "user": "SYSTEM",
+      "password": "Taspen#2018"
+  }
+}

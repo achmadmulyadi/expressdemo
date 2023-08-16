@@ -21,5 +21,6 @@ app.use(function (req, res, next) {
   });
 
 const port = 3000;
-app.listen(port);
 console.log(`Listening on port ${port}`);
+const server=app.listen(port);
+module.exports=server;
