@@ -5,7 +5,7 @@ const router = express.Router();
 
 const auth = require('../middleware/auth');
 
-router.get('/', auth, async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         console.log('query:',req.query)
 
@@ -21,7 +21,7 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-router.get('/:userId', auth, async (req, res) => {
+router.get('/:userId',  async (req, res) => {
     var userId = req.params.userId;
 
     var user = await userRepository.getDataById(userId);
@@ -33,7 +33,7 @@ router.get('/:userId', auth, async (req, res) => {
     }
 })
 
-router.post('/', auth, async (req, res) => {
+router.post('/',  async (req, res) => {
 
     const userSchema = Joi.object({
         userId: Joi.string().email().required(),
@@ -59,7 +59,7 @@ router.post('/', auth, async (req, res) => {
 
 })
 
-router.put('/', auth, async (req, res) => {
+router.put('/',  async (req, res) => {
     try {
         var userId = req.body.userId;
         var userData = req.body;

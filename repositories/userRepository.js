@@ -4,7 +4,7 @@ const parseSorting=require('../utils/parseSorting');
 
 async function getData(skip, take, filter, sort) {
     try {
-        var sqlcount = 'SELECT COUNT(*) AS COUNT FROM DEVELOPER.USERS';
+        var sqlcount = 'SELECT COUNT(*) AS COUNT FROM TASPEN.USERS';
         cmd = con.prepare(sqlcount);
         var usersCount = cmd.exec();
         var extFilter='';
@@ -17,14 +17,14 @@ async function getData(skip, take, filter, sort) {
         var sortExp=parseSorting(sort);
 
         if (skip && take) {
-            var sql = `SELECT USERID, USERNAME FROM DEVELOPER.USERS ${strExtFilter} ${sortExp} LIMIT ? OFFSET ?`;
+            var sql = `SELECT USERID, USERNAME FROM TASPEN.USERS ${strExtFilter} ${sortExp} LIMIT ? OFFSET ?`;
             var cmd = con.prepare(sql);
             var usersdb = await cmd.exec([take, skip]);
 
             return { data: usersdb, count: usersCount[0].COUNT };
         }
         else {
-            var sql = `SELECT USERID, USERNAME FROM DEVELOPER.USERS ${strExtFilter} ${sortExp}`;
+            var sql = `SELECT USERID, USERNAME FROM TASPEN.USERS ${strExtFilter} ${sortExp}`;
             var cmd = con.prepare(sql);
             var usersdb = await cmd.exec();
 
@@ -37,7 +37,7 @@ async function getData(skip, take, filter, sort) {
 }
 
 async function getDataById(userId) {
-    var sql = 'SELECT USERID, USERNAME FROM DEVELOPER.USERS WHERE USERID=?';
+    var sql = 'SELECT USERID, USERNAME FROM TASPEN.USERS WHERE USERID=?';
     var cmd = con.prepare(sql);
     var usersdb = await cmd.exec([userId]);
     if (usersdb.length > 0)
@@ -47,7 +47,7 @@ async function getDataById(userId) {
 }
 
 async function addData(user) {
-    var sql = 'INSERT INTO DEVELOPER.USERS (USERID, USERNAME) VALUES (?, ?)';
+    var sql = 'INSERT INTO TASPEN.USERS (USERID, USERNAME) VALUES (?, ?)';
     var cmd = con.prepare(sql);
     await cmd.exec([user.userId, user.userName]);
     //users.push(user);
@@ -56,7 +56,7 @@ async function addData(user) {
 
 async function updateData(user) {
 
-    var sql = 'UPDATE DEVELOPER.USERS SET USERNAME = ? WHERE USERID = ?';
+    var sql = 'UPDATE TASPEN.USERS SET USERNAME = ? WHERE USERID = ?';
     var cmd = con.prepare(sql);
     await cmd.exec([user.userName, user.userId]);
     //users.push(user);

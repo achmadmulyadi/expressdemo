@@ -1,9 +1,9 @@
 {
   "jwtPrivateKey":"t4sp3n",
     "dbConfig": {
-      "host": "172.16.50.202",
-      "port": "38141",
-      "user": "TRAINING",
-      "password":"Tr@ining1234"
+      "host": "192.100.18.21",
+      "port": "31041",
+      "user": "SYSTEM",
+      "password": "Taspen#2018"
   }
 }

@@ -4,7 +4,7 @@ const parseSorting=require('../utils/parseSorting');
 
 async function getData(skip, take, filter, sort) {
     try {
-        var sqlcount = 'SELECT COUNT(*) AS COUNT FROM DEVELOPER.ROLES';
+        var sqlcount = 'SELECT COUNT(*) AS COUNT FROM TASPEN.ROLES';
         cmd = con.prepare(sqlcount);
         var rolesCount = cmd.exec();
         var extFilter='';
@@ -17,14 +17,14 @@ async function getData(skip, take, filter, sort) {
         var sortExp=parseSorting(sort);
 
         if (skip && take) {
-            var sql = `SELECT ROLEID, ROLENAME FROM DEVELOPER.ROLES ${strExtFilter} ${sortExp} LIMIT ? OFFSET ?`;
+            var sql = `SELECT ROLEID, ROLENAME FROM TASPEN.ROLES ${strExtFilter} ${sortExp} LIMIT ? OFFSET ?`;
             var cmd = con.prepare(sql);
             var rolesdb = await cmd.exec([take, skip]);
 
             return { data: rolesdb, count: rolesCount[0].COUNT };
         }
         else {
-            var sql = `SELECT ROLEID, ROLENAME FROM DEVELOPER.ROLES ${strExtFilter} ${sortExp}`;
+            var sql = `SELECT ROLEID, ROLENAME FROM TASPEN.ROLES ${strExtFilter} ${sortExp}`;
             var cmd = con.prepare(sql);
             var rolesdb = await cmd.exec();
 
@@ -37,7 +37,7 @@ async function getData(skip, take, filter, sort) {
 }
 
 async function getDataById(roleId) {
-    var sql = 'SELECT ROLEID, ROLENAME FROM DEVELOPER.ROLES WHERE ROLEID=?';
+    var sql = 'SELECT ROLEID, ROLENAME FROM TASPEN.ROLES WHERE ROLEID=?';
     var cmd = con.prepare(sql);
     var rolesdb = await cmd.exec([roleId]);
     if (rolesdb.length > 0)
@@ -47,7 +47,7 @@ async function getDataById(roleId) {
 }
 
 async function addData(role) {
-    var sql = 'INSERT INTO DEVELOPER.ROLES (ROLEID, ROLENAME) VALUES (?, ?)';
+    var sql = 'INSERT INTO TASPEN.ROLES (ROLEID, ROLENAME) VALUES (?, ?)';
     var cmd = con.prepare(sql);
     await cmd.exec([role.roleId, role.roleName]);
     //roles.push(role);
@@ -56,7 +56,7 @@ async function addData(role) {
 
 async function updateData(role) {
 
-    var sql = 'UPDATE DEVELOPER.ROLES SET ROLENAME = ? WHERE ROLEID = ?';
+    var sql = 'UPDATE TASPEN.ROLES SET ROLENAME = ? WHERE ROLEID = ?';
     var cmd = con.prepare(sql);
     await cmd.exec([role.roleName, role.roleId]);
     //roles.push(role);
