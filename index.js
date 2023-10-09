@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const users = require('./routes/users');
 const authentication=require('./routes/authentication')
 const cors=require('cors');
+const {BlackholedSignatureError, ExpiredSignatureError} =require('signed');
 
 const app = express();
 app.use(express.json());
@@ -19,7 +20,17 @@ app.use(function (req, res, next) {
     res.header('Content-Type', 'application/json');
     next();
   });
+ 
+  app.use((err, req, res, next) => {
+      if (err instanceof BlackholedSignatureError) {
+          // signature is not valid
+      }
+      if (err instanceof ExpiredSignatureError) {
+          // signature is expired
+      }
+  });
 
+  
 const port = 3000;
 console.log(`Listening on port ${port}`);
 const server=app.listen(port);
