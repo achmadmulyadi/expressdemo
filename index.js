@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const users = require('./routes/users');
 const authentication=require('./routes/authentication')
+const document=require('./routes/document')
 const cors=require('cors');
 const {BlackholedSignatureError, ExpiredSignatureError} =require('signed');
 
@@ -12,6 +13,7 @@ app.use(helmet()); //@raising-stack
 app.use('/api/v1/users', users)
 app.use('/api/v1/roles', users)
 app.use('/api/v1/authentication', authentication)
+app.use('/api/v1/document', document)
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Credentials", "true");
