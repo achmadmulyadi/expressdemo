@@ -10,6 +10,6 @@ RUN npm install
 # RUN npm ci --omit=dev
 # Bundle app source
 COPY . .
-EXPOSE 3000:3000
+EXPOSE 3000
 RUN npm install pm2 -g
 CMD ["pm2-runtime", "ecosystem.config.js"]
